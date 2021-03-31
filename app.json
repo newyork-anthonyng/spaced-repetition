@@ -1,0 +1,12 @@
+{
+  "name": "spaced-repetition",
+  "displayName": "spaced-repetition",
+  "expo": {
+    "name": "spaced-repetition",
+    "slug": "spaced-repetition",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
