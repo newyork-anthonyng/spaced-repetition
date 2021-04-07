@@ -1,12 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useRef } from "react";
+import { Animated, View, StyleSheet, PanResponder, Text } from "react-native";
 
-export default function App() {
+function Square({ startingX, startingY }) {
+  const pan = useRef(new Animated.ValueXY({ x: startingX, y: startingY })).current;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: startingX,
+          y: startingY
+        });
+      },
+      onPanResponderMove: Animated.event([
+        null,
+        {
+          dx: pan.x,
+          dy: pan.y
+        }
+      ]),
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+        Animated.spring(pan, { toValue: { x: startingX, y: startingY } }).start();
+      }
+    })
+  ).current;
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Animated.View
+        style={{
+          transform: [{ translateX: pan.x }, { translateY: pan.y }]
+        }}
+        {...panResponder.panHandlers}
+      >
+        <View style={styles.box} />
+      </Animated.View>
+    </View>
+  );
+}
+
+const App = () => {
+  return (
+    <View>
+      <Square startingX={200} startingY={100} />
+      <Square startingX={0} startingY={0} />
     </View>
   );
 }
@@ -14,8 +53,20 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center"
   },
+  titleText: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontWeight: "bold"
+  },
+  box: {
+    height: 150,
+    width: 150,
+    backgroundColor: "blue",
+    borderRadius: 5
+  }
 });
+
+export default App;
