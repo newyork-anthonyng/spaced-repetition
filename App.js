@@ -1,72 +1,69 @@
-import React, { useRef } from "react";
-import { Animated, View, StyleSheet, PanResponder, Text } from "react-native";
+import React from 'react';
+import { Animated, PanResponder, StyleSheet, View } from 'react-native';
 
-function Square({ startingX, startingY }) {
-  const pan = useRef(new Animated.ValueXY({ x: startingX, y: startingY })).current;
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        pan.setOffset({
-          x: startingX,
-          y: startingY
-        });
-      },
-      onPanResponderMove: Animated.event([
-        null,
-        {
-          dx: pan.x,
-          dy: pan.y
-        }
-      ]),
-      onPanResponderRelease: () => {
-        pan.flattenOffset();
-        Animated.spring(pan, { toValue: { x: startingX, y: startingY } }).start();
-      }
-    })
+const startingX = 100;
+const startingY = 100;
+function DraggableView() {
+  const animated = React.useRef(
+    new Animated.ValueXY({ x: startingX, y: startingY })
   ).current;
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderGrant: () => {
+      console.log('onPanResponderGrant');
+      console.log('x', animated.x._value, animated.x._offset);
+      console.log('y', animated.y._value, animated.y._offset);
+      animated.setOffset({
+        x: animated.x._value,
+        y: animated.y._value
+      });
+    },
+    onPanResponderMove: Animated.event([
+      null,
+      {
+        dx: animated.x,
+        dy: animated.y
+      }
+    ]),
+    onPanResponderRelease: () => {
+      console.log('onPanResponderRelease');
+      console.log('x', animated.x._value, animated.x._offset);
+      console.log('y', animated.y._value, animated.y._offset);
+      animated.flattenOffset();
+      // Animated.spring(
+      //   animated,
+      //   { toValue: { x: startingX, y: startingY } }
+      // ).start();
+    }
+  });
 
   return (
     <View style={styles.container}>
       <Animated.View
-        style={{
-          transform: [{ translateX: pan.x }, { translateY: pan.y }]
-        }}
         {...panResponder.panHandlers}
-      >
-        <View style={styles.box} />
-      </Animated.View>
+        style={[animated.getLayout(), styles.box]}
+      />
     </View>
   );
 }
 
-const App = () => {
-  return (
-    <View>
-      <Square startingX={200} startingY={100} />
-      <Square startingX={0} startingY={0} />
-    </View>
-  );
+function App() {
+  return <DraggableView />
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "center"
-  },
-  titleText: {
-    fontSize: 14,
-    lineHeight: 24,
-    fontWeight: "bold"
   },
   box: {
-    height: 150,
-    width: 150,
-    backgroundColor: "blue",
-    borderRadius: 5
-  }
+    backgroundColor: "#61dafb",
+    width: 80,
+    height: 80,
+    borderRadius: 4,
+  },
 });
 
 export default App;
