@@ -1,9 +1,9 @@
+// https://stackoverflow.com/questions/47551462/how-to-drag-and-drop-with-multiple-view-in-react-native
 import React from 'react';
-import { Animated, PanResponder, StyleSheet, View } from 'react-native';
+import { Image, Animated, PanResponder, StyleSheet, View, Text } from 'react-native';
+import car from './assets/car.jpg';
 
-const startingX = 100;
-const startingY = 100;
-function DraggableView() {
+function DraggableView({ startingX, startingY, children }) {
   const animated = React.useRef(
     new Animated.ValueXY({ x: startingX, y: startingY })
   ).current;
@@ -11,9 +11,8 @@ function DraggableView() {
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
-      console.log('onPanResponderGrant');
-      console.log('x', animated.x._value, animated.x._offset);
-      console.log('y', animated.y._value, animated.y._offset);
+      Animated.spring(animated).reset();
+
       animated.setOffset({
         x: animated.x._value,
         y: animated.y._value
@@ -27,14 +26,14 @@ function DraggableView() {
       }
     ]),
     onPanResponderRelease: () => {
-      console.log('onPanResponderRelease');
-      console.log('x', animated.x._value, animated.x._offset);
-      console.log('y', animated.y._value, animated.y._offset);
       animated.flattenOffset();
-      // Animated.spring(
-      //   animated,
-      //   { toValue: { x: startingX, y: startingY } }
-      // ).start();
+      Animated.spring(
+        animated,
+        {
+          toValue: { x: startingX, y: startingY },
+          bounciness: 15
+        }
+      ).start();
     }
   });
 
@@ -43,13 +42,29 @@ function DraggableView() {
       <Animated.View
         {...panResponder.panHandlers}
         style={[animated.getLayout(), styles.box]}
-      />
+      >
+        {children}
+      </Animated.View>
     </View>
   );
 }
 
 function App() {
-  return <DraggableView />
+  return (
+    <View>
+      <Image source={car} style={{ width: 200, height: 200 }} />
+
+      <DraggableView startingX={100} startingY={100}>
+        <Text>Car</Text>
+      </DraggableView>
+      <DraggableView startingX={200} startingY={200}>
+        <Text>Cat</Text>
+      </DraggableView>
+      <DraggableView startingX={300} startingY={300}>
+        <Text>Cat</Text>
+      </DraggableView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
