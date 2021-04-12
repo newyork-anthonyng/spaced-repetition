@@ -38,7 +38,7 @@ function DraggableView({ startingX, startingY, children }) {
   });
 
   return (
-    <View style={styles.container}>
+    <View>
       <Animated.View
         {...panResponder.panHandlers}
         style={[animated.getLayout(), styles.box]}
@@ -51,16 +51,19 @@ function DraggableView({ startingX, startingY, children }) {
 
 function App() {
   return (
-    <View>
-      <Image source={car} style={{ width: 200, height: 200 }} />
+    <View style={styles.app}>
+      <Image
+        source={car}
+        style={{ width: 200, height: 200 }}
+      />
 
-      <DraggableView startingX={100} startingY={100}>
+    <DraggableView startingX={0} startingY={0}>
         <Text>Car</Text>
       </DraggableView>
-      <DraggableView startingX={200} startingY={200}>
+      <DraggableView startingX={100} startingY={100}>
         <Text>Cat</Text>
       </DraggableView>
-      <DraggableView startingX={300} startingY={300}>
+      <DraggableView startingX={200} startingY={200}>
         <Text>Cat</Text>
       </DraggableView>
     </View>
@@ -68,16 +71,24 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  app: {
+    borderWidth: 1,
+    borderColor: "red",
+    position: "absolute",
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   box: {
     backgroundColor: "#61dafb",
     width: 80,
     height: 80,
     borderRadius: 4,
+    position: "absolute"
   },
 });
 
