@@ -1,7 +1,9 @@
 // https://stackoverflow.com/questions/47551462/how-to-drag-and-drop-with-multiple-view-in-react-native
 import React from 'react';
-import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert } from 'react-native';
+import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert, Button } from 'react-native';
 import car from './assets/car.jpg';
+import flashcardMachine from './machine';
+import { useMachine } from '@xstate/react';
 
 function DraggableView({ startingX, startingY, children, onRelease }) {
   const animated = React.useRef(
@@ -54,38 +56,84 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
 }
 
 function App() {
+  const [state, send] = useMachine(flashcardMachine);
+
   function handleRelease() {
-    Alert.alert(
-        'You got it correct!',
-        'Good job'
-    );
+    send('CORRECT');
+    // Alert.alert(
+    //     'You got it correct!',
+    //     'Good job'
+    // );
   }
 
   function handleWrongAnswer() {
-    Alert.alert(
-        'You got it wrong!',
-        'Try again'
+    send('WRONG');
+    // Alert.alert(
+    //     'You got it wrong!',
+    //     'Try again'
+    // );
+  }
+
+  function handleSuccessNextPress() {
+    send("NEXT");
+  }
+
+  const { context } = state;
+
+  const currentIndex = context.currentIndex;
+  const currentItem = context.items[currentIndex] || {};
+  const choices = currentItem.choices;
+
+  if (state.matches('idle')) {
+    return (
+      <View style={styles.app}>
+        <Image
+          source={car}
+          style={{ width: 200, height: 200 }}
+        />
+
+
+        {
+          choices.map((choice, index) => (
+            <DraggableView startingX={0} startingY={index * 100} onRelease={handleRelease}>
+              <Text>{choice}</Text>
+            </DraggableView>
+          ))
+        }
+
+      </View>
     );
   }
 
-  return (
-    <View style={styles.app}>
-      <Image
-        source={car}
-        style={{ width: 200, height: 200 }}
-      />
+  if (state.matches('success')) {
+    return (
+      <View style={styles.app}>
+        <Text>Success!!!</Text>
+        <Button
+          title="Next"
+          onPress={handleSuccessNextPress}
+        />
+      </View>
+    );
+  }
 
-    <DraggableView startingX={0} startingY={0} onRelease={handleRelease}>
-        <Text>Car</Text>
-      </DraggableView>
-      <DraggableView startingX={0} startingY={100} onRelease={handleWrongAnswer}>
-        <Text>Cat</Text>
-      </DraggableView>
-      <DraggableView startingX={0} startingY={200} onRelease={handleWrongAnswer}>
-        <Text>Cat</Text>
-      </DraggableView>
-    </View>
-  );
+  if (state.matches('failure')) {
+    return (
+      <View style={styles.app}>
+        <Text>Failed :(</Text>
+      </View>
+    );
+  }
+
+  if (state.matches('complete')) {
+    return (
+      <View style={styles.app}>
+        <Text>Completed!</Text>
+      </View>
+    );
+  }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -98,7 +146,6 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     display: "flex",
-    // justifyContent: "center",
     alignItems: "center"
   },
   box: {
