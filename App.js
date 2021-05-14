@@ -1,9 +1,9 @@
 // https://stackoverflow.com/questions/47551462/how-to-drag-and-drop-with-multiple-view-in-react-native
 import React from 'react';
-import { Image, Animated, PanResponder, StyleSheet, View, Text } from 'react-native';
+import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert } from 'react-native';
 import car from './assets/car.jpg';
 
-function DraggableView({ startingX, startingY, children }) {
+function DraggableView({ startingX, startingY, children, onRelease }) {
   const animated = React.useRef(
     new Animated.ValueXY({ x: startingX, y: startingY })
   ).current;
@@ -34,6 +34,10 @@ function DraggableView({ startingX, startingY, children }) {
           bounciness: 15
         }
       ).start();
+
+      if (onRelease) {
+        onRelease();
+      }
     }
   });
 
@@ -50,6 +54,20 @@ function DraggableView({ startingX, startingY, children }) {
 }
 
 function App() {
+  function handleRelease() {
+    Alert.alert(
+        'You got it correct!',
+        'Good job'
+    );
+  }
+
+  function handleWrongAnswer() {
+    Alert.alert(
+        'You got it wrong!',
+        'Try again'
+    );
+  }
+
   return (
     <View style={styles.app}>
       <Image
@@ -57,13 +75,13 @@ function App() {
         style={{ width: 200, height: 200 }}
       />
 
-    <DraggableView startingX={0} startingY={0}>
+    <DraggableView startingX={0} startingY={0} onRelease={handleRelease}>
         <Text>Car</Text>
       </DraggableView>
-      <DraggableView startingX={100} startingY={100}>
+      <DraggableView startingX={0} startingY={100} onRelease={handleWrongAnswer}>
         <Text>Cat</Text>
       </DraggableView>
-      <DraggableView startingX={200} startingY={200}>
+      <DraggableView startingX={0} startingY={200} onRelease={handleWrongAnswer}>
         <Text>Cat</Text>
       </DraggableView>
     </View>
@@ -80,7 +98,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     display: "flex",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center"
   },
   box: {
