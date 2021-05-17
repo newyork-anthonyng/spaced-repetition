@@ -87,70 +87,59 @@ function App() {
   const choices = currentItem.choices;
   const percentage = (currentIndex / context.items.length) * 100;
 
+  let body;
   if (state.matches('idle')) {
-    return (
-      <View style={styles.app}>
+    body = choices.map((choice, index) => (
+      <DraggableView startingX={0} startingY={index * 100} onRelease={handleRelease}>
+        <Text>{choice}</Text>
+      </DraggableView>
+    ));
+  } else if (state.matches('success')) {
+    body = <>
+      <Text>Success!!!</Text>
+      <Button
+        title="Next"
+        onPress={handleSuccessNextPress}
+      />
+    </>
+  } else if (state.matches('failure')) {
+    body = <Text>Failed :(</Text>
+  } else if (state.matches('complete')) {
+    body = <Text>Completed!</Text>;
+  } else {
+    return null;
+  }
+
+  return (
+    <View style={styles.app}>
+      <View style={styles.leftContainer}>
+        <ProgressBar percentage={percentage} />
+      </View>
+
+      <View style={styles.rightContainer}>
+        {
+        }
         <Image
           source={car}
           style={{ width: 200, height: 200 }}
         />
-
-
-        {
-          choices.map((choice, index) => (
-            <DraggableView startingX={0} startingY={index * 100} onRelease={handleRelease}>
-              <Text>{choice}</Text>
-            </DraggableView>
-          ))
-        }
-        <ProgressBar percentage={percentage} />
-
+        {body}
       </View>
-    );
-  }
-
-  if (state.matches('success')) {
-    return (
-      <View style={styles.app}>
-        <Text>Success!!!</Text>
-        <Button
-          title="Next"
-          onPress={handleSuccessNextPress}
-        />
-      </View>
-    );
-  }
-
-  if (state.matches('failure')) {
-    return (
-      <View style={styles.app}>
-        <Text>Failed :(</Text>
-      </View>
-    );
-  }
-
-  if (state.matches('complete')) {
-    return (
-      <View style={styles.app}>
-        <Text>Completed!</Text>
-      </View>
-    );
-  }
 
 
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   app: {
-    borderWidth: 1,
-    borderColor: "red",
     position: "absolute",
     top: 0,
     right: 0,
     left: 0,
     bottom: 0,
     display: "flex",
-    alignItems: "center"
+    flexDirection: "Row"
   },
   box: {
     backgroundColor: "#61dafb",
@@ -159,6 +148,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     position: "absolute"
   },
+  leftContainer: {
+    height: '100%',
+    width: '25%'
+  },
+  rightContainer: {}
 });
 
 export default App;

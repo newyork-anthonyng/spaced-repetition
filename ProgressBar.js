@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert, Button } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 function ProgressBar({ percentage }) {
   const animation = React.useRef(new Animated.Value(percentage));
@@ -13,7 +13,7 @@ function ProgressBar({ percentage }) {
     ).start();
   }, [percentage]);
 
-  const width = animation.current.interpolate({
+  const height = animation.current.interpolate({
     inputRange: [0, 100],
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp'
@@ -26,7 +26,7 @@ function ProgressBar({ percentage }) {
           [StyleSheet.absoluteFill],
           {
             backgroundColor: '#88ED4F',
-            width
+            height
           }
         }
       />
@@ -36,13 +36,14 @@ function ProgressBar({ percentage }) {
 
 const styles = StyleSheet.create({
   progressBar: {
-    height: 20,
-    width: '100%',
+    height: '100%',
+    width: 20,
     backgroundColor: 'white',
     borderColor: '#000',
     borderWidth: 2,
     borderRadius: 5,
-    flexDirection: 'Row'
+    flexDirection: 'Column',
+    justifyContent: 'Flex-End'
   }
 });
 
