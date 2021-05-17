@@ -85,6 +85,7 @@ function App() {
   const currentIndex = context.currentIndex;
   const currentItem = context.items[currentIndex] || {};
   const choices = currentItem.choices;
+  const percentage = (currentIndex / context.items.length) * 100;
 
   if (state.matches('idle')) {
     return (
@@ -102,7 +103,7 @@ function App() {
             </DraggableView>
           ))
         }
-        <ProgressBar percentage={25} />
+        <ProgressBar percentage={percentage} />
 
       </View>
     );
