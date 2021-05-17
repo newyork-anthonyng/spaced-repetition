@@ -2,8 +2,10 @@
 import React from 'react';
 import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert, Button } from 'react-native';
 import car from './assets/car.jpg';
+import ProgressBar from './ProgressBar';
 import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
+
 
 function DraggableView({ startingX, startingY, children, onRelease }) {
   const animated = React.useRef(
@@ -100,6 +102,7 @@ function App() {
             </DraggableView>
           ))
         }
+        <ProgressBar percentage={25} />
 
       </View>
     );
