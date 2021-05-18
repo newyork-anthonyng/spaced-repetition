@@ -1,5 +1,6 @@
 import React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Image, Animated, StyleSheet, View } from 'react-native';
+import star from './assets/star.png';
 
 function ProgressBar({ percentage }) {
   const animation = React.useRef(new Animated.Value(percentage));
@@ -20,23 +21,34 @@ function ProgressBar({ percentage }) {
   });
 
   return (
-    <View style={styles.progressBar}>
-      <Animated.View
-        style={
-          [StyleSheet.absoluteFill],
-          {
-            backgroundColor: '#88ED4F',
-            height
-          }
-        }
+    <View style={styles.container}>
+      <Image
+        source={star}
+        style={{ width: 64, height: 64 }}
       />
+      <View style={styles.progressBar}>
+
+
+        <Animated.View
+          style={
+            [StyleSheet.absoluteFill],
+            {
+              backgroundColor: '#88ED4F',
+              height
+            }
+          }
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height: '100%'
+  },
   progressBar: {
-    height: '100%',
+    height: '80%',
     width: 20,
     backgroundColor: 'white',
     borderColor: '#000',
