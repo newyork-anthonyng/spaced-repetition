@@ -5,6 +5,21 @@ import car from './assets/car.jpg';
 import ProgressBar from './ProgressBar';
 import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
+import { Audio } from 'expo-av';
+
+function MyAudio({ src }) {
+  async function playSound() {
+    const { sound } = await Audio.Sound.createAsync(src);
+
+    await sound.playAsync();
+  }
+
+  return (
+    <View>
+      <Button title="Play Sound" onPress={playSound} />
+    </View>
+  );
+}
 
 
 function DraggableView({ startingX, startingY, children, onRelease }) {
@@ -62,18 +77,10 @@ function App() {
 
   function handleRelease() {
     send('CORRECT');
-    // Alert.alert(
-    //     'You got it correct!',
-    //     'Good job'
-    // );
   }
 
   function handleWrongAnswer() {
     send('WRONG');
-    // Alert.alert(
-    //     'You got it wrong!',
-    //     'Try again'
-    // );
   }
 
   function handleSuccessNextPress() {
@@ -90,7 +97,7 @@ function App() {
   let body;
   if (state.matches('idle')) {
     body = choices.map((choice, index) => (
-      <DraggableView startingX={0} startingY={index * 100} onRelease={handleRelease}>
+      <DraggableView key={index} startingX={0} startingY={index * 100} onRelease={handleRelease}>
         <Text>{choice}</Text>
       </DraggableView>
     ));
@@ -117,12 +124,7 @@ function App() {
       </View>
 
       <View style={styles.rightContainer}>
-        {
-        }
-        <Image
-          source={car}
-          style={{ width: 200, height: 200 }}
-        />
+        <MyAudio src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'} />
         {body}
       </View>
 
