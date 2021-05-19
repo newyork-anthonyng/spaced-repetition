@@ -1,4 +1,25 @@
 import { createMachine, assign } from 'xstate';
+//
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 
 const flashcardMachine = createMachine({
   id: 'flashcard',
@@ -7,26 +28,25 @@ const flashcardMachine = createMachine({
     currentIndex: 0,
     items: [
       {
-        choices: [
-          'Car',
-          'Cat',
-          'Cow'
-        ]
+        audio: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+        answer: 'Dinosaur',
+        choices: shuffle([
+          'Dog',
+          'Donkey',
+          'Daisy',
+          'Dinosaur'
+        ]),
       },
       {
-        choices: [
+        audio: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+        answer: 'Dinosaur',
+        choices: shuffle([
           'Date',
           'Dowel',
-          'Dooo'
-        ]
+          'Dooo',
+          'Dinosaur'
+        ])
       },
-      {
-        choices: [
-          'Eck',
-          'Eagle',
-          'Elephant'
-        ]
-      }
     ]
   },
   states: {

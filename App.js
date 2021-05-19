@@ -7,9 +7,12 @@ import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
 import { Audio } from 'expo-av';
 
+
 function MyAudio({ src }) {
   async function playSound() {
-    const { sound } = await Audio.Sound.createAsync(src);
+    const { sound } = await Audio.Sound.createAsync({
+      uri: src
+    });
 
     await sound.playAsync();
   }
@@ -75,18 +78,6 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
 function App() {
   const [state, send] = useMachine(flashcardMachine);
 
-  function handleRelease() {
-    send('CORRECT');
-  }
-
-  function handleWrongAnswer() {
-    send('WRONG');
-  }
-
-  function handleSuccessNextPress() {
-    send("NEXT");
-  }
-
   const { context } = state;
 
   const currentIndex = context.currentIndex;
@@ -94,10 +85,33 @@ function App() {
   const choices = currentItem.choices;
   const percentage = (currentIndex / context.items.length) * 100;
 
+  function handleRelease(choice) {
+    return () => {
+      if (choice === currentItem.answer) {
+        send('CORRECT');
+      } else {
+        send('WRONG');
+      }
+    }
+  }
+
+  function handleSuccessNextPress() {
+    send("NEXT");
+  }
+
+  function handleFailureNextPress() {
+    send("NEXT");
+  }
+
   let body;
   if (state.matches('idle')) {
     body = choices.map((choice, index) => (
-      <DraggableView key={index} startingX={0} startingY={index * 100} onRelease={handleRelease}>
+      <DraggableView
+        key={index}
+        startingX={0}
+        startingY={index * 100}
+        onRelease={handleRelease(choice)}
+      >
         <Text>{choice}</Text>
       </DraggableView>
     ));
@@ -110,7 +124,12 @@ function App() {
       />
     </>
   } else if (state.matches('failure')) {
-    body = <Text>Failed :(</Text>
+    body = (
+      <React.Fragment>
+        <Text>Failed :(</Text>
+        <Button title="Try again" onPress={handleFailureNextPress} />
+      </React.Fragment>
+    );
   } else if (state.matches('complete')) {
     body = <Text>Completed!</Text>;
   } else {
@@ -141,7 +160,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     display: "flex",
-    flexDirection: "Row"
+    flexDirection: "row"
   },
   box: {
     backgroundColor: "#61dafb",

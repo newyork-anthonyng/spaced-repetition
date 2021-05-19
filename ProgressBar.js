@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 2,
     borderRadius: 5,
-    flexDirection: 'Column',
-    justifyContent: 'Flex-End'
+    flexDirection: 'column',
+    justifyContent: 'flex-end'
   }
 });
 
