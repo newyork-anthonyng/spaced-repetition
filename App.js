@@ -5,25 +5,7 @@ import car from './assets/car.jpg';
 import ProgressBar from './ProgressBar';
 import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
-import { Audio } from 'expo-av';
-
-
-function MyAudio({ src }) {
-  async function playSound() {
-    const { sound } = await Audio.Sound.createAsync({
-      uri: src
-    });
-
-    await sound.playAsync();
-  }
-
-  return (
-    <View>
-      <Button title="Play Sound" onPress={playSound} />
-    </View>
-  );
-}
-
+import Speaker from './Speaker';
 
 function DraggableView({ startingX, startingY, children, onRelease }) {
   const animated = React.useRef(
@@ -143,7 +125,7 @@ function App() {
       </View>
 
       <View style={styles.rightContainer}>
-        <MyAudio src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'} />
+        <Speaker src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'} />
         {body}
       </View>
 
