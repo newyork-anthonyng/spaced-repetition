@@ -29,7 +29,11 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
         dy: animated.y
       }
     ]),
-    onPanResponderRelease: () => {
+    onPanResponderRelease: (event) => {
+      if (onRelease) {
+        onRelease({ x: event.nativeEvent.pageX, y: event.nativeEvent.pageY });
+      }
+
       animated.flattenOffset();
       Animated.spring(
         animated,
@@ -38,10 +42,6 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
           bounciness: 15
         }
       ).start();
-
-      if (onRelease) {
-        onRelease();
-      }
     }
   });
 
@@ -59,7 +59,6 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
 
 function App() {
   const [state, send] = useMachine(flashcardMachine);
-
   const { context } = state;
 
   const currentIndex = context.currentIndex;
@@ -68,7 +67,10 @@ function App() {
   const percentage = (currentIndex / context.items.length) * 100;
 
   function handleRelease(choice) {
-    return () => {
+    return (coords) => {
+      const isInsideZone = coords.y < 150;
+      if (!isInsideZone) return;
+
       if (choice === currentItem.answer) {
         send('CORRECT');
       } else {
