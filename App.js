@@ -1,61 +1,13 @@
 // https://stackoverflow.com/questions/47551462/how-to-drag-and-drop-with-multiple-view-in-react-native
 import React from 'react';
-import { Image, Animated, PanResponder, StyleSheet, View, Text, Alert, Button } from 'react-native';
-import car from './assets/car.jpg';
+import { Image, Animated, StyleSheet, View, Text, Alert, Button } from 'react-native';
 import ProgressBar from './ProgressBar';
 import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
 import Speaker from './Speaker';
-
-function DraggableView({ startingX, startingY, children, onRelease }) {
-  const animated = React.useRef(
-    new Animated.ValueXY({ x: startingX, y: startingY })
-  ).current;
-
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderGrant: () => {
-      Animated.spring(animated).reset();
-
-      animated.setOffset({
-        x: animated.x._value,
-        y: animated.y._value
-      });
-    },
-    onPanResponderMove: Animated.event([
-      null,
-      {
-        dx: animated.x,
-        dy: animated.y
-      }
-    ]),
-    onPanResponderRelease: (event) => {
-      if (onRelease) {
-        onRelease({ x: event.nativeEvent.pageX, y: event.nativeEvent.pageY });
-      }
-
-      animated.flattenOffset();
-      Animated.spring(
-        animated,
-        {
-          toValue: { x: startingX, y: startingY },
-          bounciness: 15
-        }
-      ).start();
-    }
-  });
-
-  return (
-    <View>
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={[animated.getLayout(), styles.box]}
-      >
-        {children}
-      </Animated.View>
-    </View>
-  );
-}
+import DraggableView from './DraggableView';
+import CorrectImage from './CorrectImage';
+import IncorrectImage from './IncorrectImage';
 
 function App() {
   const [state, send] = useMachine(flashcardMachine);
@@ -79,46 +31,24 @@ function App() {
     }
   }
 
-  function handleSuccessNextPress() {
-    send("NEXT");
+  function handleCorrectImageAnimationEnd() {
+    send('NEXT');
   }
 
-  function handleFailureNextPress() {
-    send("NEXT");
+  function handleIncorrectImageAnimationEnd() {
+    send('NEXT');
   }
 
-  let body;
-  if (state.matches('idle')) {
-    body = choices.map((choice, index) => (
-      <DraggableView
-        key={index}
-        startingX={0}
-        startingY={index * 100}
-        onRelease={handleRelease(choice)}
-      >
-        <Text>{choice}</Text>
-      </DraggableView>
-    ));
-  } else if (state.matches('success')) {
-    body = <>
-      <Text>Success!!!</Text>
-      <Button
-        title="Next"
-        onPress={handleSuccessNextPress}
-      />
-    </>
-  } else if (state.matches('failure')) {
-    body = (
-      <React.Fragment>
-        <Text>Failed :(</Text>
-        <Button title="Try again" onPress={handleFailureNextPress} />
-      </React.Fragment>
-    );
-  } else if (state.matches('complete')) {
-    body = <Text>Completed!</Text>;
-  } else {
-    return null;
-  }
+  let body = choices.map((choice, index) => (
+    <DraggableView
+      key={index}
+      startingX={0}
+      startingY={index * 100}
+      onRelease={handleRelease(choice)}
+    >
+      <Text>{choice}</Text>
+    </DraggableView>
+  ));
 
   return (
     <View style={styles.app}>
@@ -129,6 +59,15 @@ function App() {
       <View style={styles.rightContainer}>
         <Speaker src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'} />
         {body}
+
+        {state.matches('correct') && (
+          <CorrectImage onEnd={handleCorrectImageAnimationEnd} />
+        )}
+        {state.matches('incorrect') && (
+          <IncorrectImage onEnd={handleIncorrectImageAnimationEnd} />
+        )}
+
+        <Text style={styles.debug}>>{JSON.stringify(state.value, null, 2)}</Text>
       </View>
 
 
@@ -137,6 +76,10 @@ function App() {
 }
 
 const styles = StyleSheet.create({
+  debug: {
+    position: "absolute",
+    bottom: 0
+  },
   app: {
     position: "absolute",
     top: 0,

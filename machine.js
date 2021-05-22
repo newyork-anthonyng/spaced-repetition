@@ -1,5 +1,5 @@
 import { createMachine, assign } from 'xstate';
-//
+
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -53,17 +53,17 @@ const flashcardMachine = createMachine({
     idle: {
       on: {
         CORRECT: {
-          target: 'success',
+          target: 'correct',
           actions: assign((context) => {
             return {
               currentIndex: context.currentIndex + 1
             };
           })
         },
-        WRONG: 'failure'
+        WRONG: 'incorrect'
       }
     },
-    success: {
+    correct: {
       on: {
         NEXT: [
           {
@@ -74,7 +74,7 @@ const flashcardMachine = createMachine({
         ]
       }
     },
-    failure: {
+    incorrect: {
       on: {
         NEXT: 'idle'
       }
