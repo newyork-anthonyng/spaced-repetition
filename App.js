@@ -15,7 +15,7 @@ function App() {
 
   const currentIndex = context.currentIndex;
   const currentItem = context.items[currentIndex] || {};
-  const choices = currentItem.choices;
+  const choices = currentItem.choices || [];
   const percentage = (currentIndex / context.items.length) * 100;
 
   function handleRelease(choice) {
@@ -39,6 +39,10 @@ function App() {
     send('NEXT');
   }
 
+  function handlePlay() {
+    send('LISTEN');
+  }
+
   let body = choices.map((choice, index) => (
     <DraggableView
       key={index}
@@ -47,9 +51,17 @@ function App() {
       onRelease={handleRelease(choice)}
       disabled={!state.matches('idle')}
     >
-      <Text>{choice}</Text>
+      <View style={[
+        styles.box,
+        {
+          backgroundColor: state.matches('idle') ? '#61dafb' : 'gray'
+        }
+      ]}>
+        <Text>{choice}</Text>
+      </View>
     </DraggableView>
   ));
+  const shouldShowChoices = !state.matches('readyToListen');
 
   return (
     <View style={styles.app}>
@@ -58,29 +70,31 @@ function App() {
       </View>
 
       <View style={styles.rightContainer}>
-        <Speaker src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'} />
-        {body}
+        {state.matches('complete') ? (
+          <Text>You did it!!!!</Text>
+        ) : (
+          <React.Fragment>
+            <Speaker
+              src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'}
+              onPlay={handlePlay}
+            />
 
-        {state.matches('correct') && (
-          <CorrectImage onEnd={handleCorrectImageAnimationEnd} />
-        )}
-        {state.matches('incorrect') && (
-          <IncorrectImage onEnd={handleIncorrectImageAnimationEnd} />
-        )}
+            {shouldShowChoices && body}
 
-        <Text style={styles.debug}>>{JSON.stringify(state.value, null, 2)}</Text>
+            {state.matches('correct') && (
+              <CorrectImage onEnd={handleCorrectImageAnimationEnd} />
+            )}
+            {state.matches('incorrect') && (
+              <IncorrectImage onEnd={handleIncorrectImageAnimationEnd} />
+            )}
+          </React.Fragment>
+        )}
       </View>
-
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  debug: {
-    position: "absolute",
-    bottom: 0
-  },
   app: {
     position: "absolute",
     top: 0,
@@ -91,7 +105,6 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   box: {
-    backgroundColor: "#61dafb",
     width: 80,
     height: 80,
     borderRadius: 4,

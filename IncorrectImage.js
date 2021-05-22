@@ -11,6 +11,7 @@ function IncorrectImage({ onEnd }) {
     });
     const exit = Animated.spring(xPosition, {
       toValue: 500,
+      duration: 100,
       useNativeDriver: false
     });
 

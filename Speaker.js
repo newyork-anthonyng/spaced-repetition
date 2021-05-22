@@ -3,13 +3,16 @@ import { View, Button, Image, Pressable, StyleSheet, Text } from 'react-native';
 import { Audio } from 'expo-av';
 import speaker from './assets/speaker.png';
 
-function Speaker({ src }) {
+function Speaker({ src, onPlay }) {
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync({
       uri: src
     });
 
     await sound.playAsync();
+    if (onPlay) {
+      onPlay();
+    }
   }
 
   return (

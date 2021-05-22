@@ -46,7 +46,7 @@ function DraggableView({ startingX, startingY, children, onRelease, disabled }) 
     <View pointerEvents={disabled ? 'none' : 'auto'}>
       <Animated.View
         {...panResponder.panHandlers}
-        style={[animated.getLayout(), styles.box]}
+        style={[animated.getLayout()]}
       >
         {children}
       </Animated.View>

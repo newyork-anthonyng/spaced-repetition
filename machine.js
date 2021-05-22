@@ -23,7 +23,7 @@ function shuffle(array) {
 
 const flashcardMachine = createMachine({
   id: 'flashcard',
-  initial: 'idle',
+  initial: 'readyToListen',
   context: {
     currentIndex: 0,
     items: [
@@ -50,6 +50,11 @@ const flashcardMachine = createMachine({
     ]
   },
   states: {
+    readyToListen: {
+      on: {
+        LISTEN: 'idle'
+      }
+    },
     idle: {
       on: {
         CORRECT: {
@@ -70,7 +75,7 @@ const flashcardMachine = createMachine({
             target: 'complete',
             cond: 'isOnLastCard'
           },
-          'idle'
+          'readyToListen'
         ]
       }
     },
