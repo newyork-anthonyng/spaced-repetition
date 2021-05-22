@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, PanResponder, View, StyleSheet } from 'react-native';
 
-function DraggableView({ startingX, startingY, children, onRelease }) {
+function DraggableView({ startingX, startingY, children, onRelease, disabled }) {
   const animated = React.useRef(
     new Animated.ValueXY({ x: startingX, y: startingY })
   ).current;
@@ -17,12 +17,14 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
       });
     },
     onPanResponderMove: Animated.event([
-      null,
-      {
-        dx: animated.x,
-        dy: animated.y
-      }
-    ]),
+        null,
+        {
+          dx: animated.x,
+          dy: animated.y
+        }
+      ],
+      { useNativeDriver: false }
+    ),
     onPanResponderRelease: (event) => {
       if (onRelease) {
         onRelease({ x: event.nativeEvent.pageX, y: event.nativeEvent.pageY });
@@ -33,14 +35,15 @@ function DraggableView({ startingX, startingY, children, onRelease }) {
         animated,
         {
           toValue: { x: startingX, y: startingY },
-          bounciness: 15
+          bounciness: 15,
+          useNativeDriver: false
         }
       ).start();
     }
   });
 
   return (
-    <View>
+    <View pointerEvents={disabled ? 'none' : 'auto'}>
       <Animated.View
         {...panResponder.panHandlers}
         style={[animated.getLayout(), styles.box]}

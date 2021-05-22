@@ -45,6 +45,7 @@ function App() {
       startingX={0}
       startingY={index * 100}
       onRelease={handleRelease(choice)}
+      disabled={!state.matches('idle')}
     >
       <Text>{choice}</Text>
     </DraggableView>

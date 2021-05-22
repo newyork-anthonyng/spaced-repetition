@@ -9,7 +9,8 @@ function ProgressBar({ percentage }) {
     Animated.timing(
       animation.current, {
         toValue: percentage,
-        duration: 100
+        duration: 100,
+        useNativeDriver: false
       }
     ).start();
   }, [percentage]);
