@@ -16,6 +16,7 @@ function App() {
   const currentIndex = context.currentIndex;
   const currentItem = context.items[currentIndex] || {};
   const choices = currentItem.choices || [];
+  const audioSource = currentItem.audio;
   const percentage = (currentIndex / context.items.length) * 100;
 
   function handleRelease(choice) {
@@ -75,7 +76,7 @@ function App() {
         ) : (
           <React.Fragment>
             <Speaker
-              src={'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'}
+              src={audioSource}
               onPlay={handlePlay}
             />
 

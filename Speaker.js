@@ -5,9 +5,7 @@ import speaker from './assets/speaker.png';
 
 function Speaker({ src, onPlay }) {
   async function playSound() {
-    const { sound } = await Audio.Sound.createAsync({
-      uri: src
-    });
+    const { sound } = await Audio.Sound.createAsync(src);
 
     await sound.playAsync();
     if (onPlay) {

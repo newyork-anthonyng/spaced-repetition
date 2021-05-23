@@ -28,23 +28,53 @@ const flashcardMachine = createMachine({
     currentIndex: 0,
     items: [
       {
-        audio: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-        answer: 'Dinosaur',
+        audio: require('./assets/audio/box.m4a'),
+        answer: 'Box',
         choices: shuffle([
-          'Dog',
-          'Donkey',
-          'Daisy',
-          'Dinosaur'
+          'Box',
+          'Day',
+          'No',
+          'Pig'
         ]),
       },
       {
-        audio: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-        answer: 'Dinosaur',
+        audio: require('./assets/audio/day.m4a'),
+        answer: 'Day',
         choices: shuffle([
-          'Date',
-          'Dowel',
-          'Dooo',
-          'Dinosaur'
+          'Day',
+          'Box',
+          'No',
+          'Pig'
+        ])
+      },
+      {
+        audio: require('./assets/audio/no.m4a'),
+        answer: 'No',
+        choices: shuffle([
+          'No',
+          'Day',
+          'Pig',
+          'Box'
+        ])
+      },
+      {
+        audio: require('./assets/audio/pig.m4a'),
+        answer: 'Pig',
+        choices: shuffle([
+          'Pig',
+          'No',
+          'Toy',
+          'Box'
+        ])
+      },
+      {
+        audio: require('./assets/audio/toy.m4a'),
+        answer: 'Toy',
+        choices: shuffle([
+          'Toy',
+          'And',
+          'Box',
+          'Pig'
         ])
       },
     ]
