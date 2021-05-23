@@ -6,7 +6,7 @@ function IncorrectImage({ onEnd }) {
 
   React.useEffect(() => {
     const entry = Animated.spring(xPosition, {
-      toValue: 0,
+      toValue: -50,
       useNativeDriver: false
     });
     const exit = Animated.spring(xPosition, {

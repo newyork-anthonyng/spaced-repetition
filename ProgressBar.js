@@ -34,7 +34,9 @@ function ProgressBar({ percentage }) {
           style={
             [StyleSheet.absoluteFill],
             {
-              backgroundColor: '#88ED4F',
+              backgroundColor: '#92F07A',
+              borderBottomLeftRadius: 50,
+              borderBottomRightRadius: 50,
               height
             }
           }
@@ -46,17 +48,18 @@ function ProgressBar({ percentage }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%'
+    height: '100%',
+    marginTop: 30,
+    marginLeft: 10
   },
   progressBar: {
     height: '80%',
     width: 20,
-    backgroundColor: 'white',
-    borderColor: '#000',
-    borderWidth: 2,
-    borderRadius: 5,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 50,
     flexDirection: 'column',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginLeft: 22
   }
 });
 

@@ -8,6 +8,7 @@ import Speaker from './Speaker';
 import DraggableView from './DraggableView';
 import CorrectImage from './CorrectImage';
 import IncorrectImage from './IncorrectImage';
+import CompletedScreen from './CompletedScreen';
 
 function App() {
   const [state, send] = useMachine(flashcardMachine);
@@ -21,7 +22,7 @@ function App() {
 
   function handleRelease(choice) {
     return (coords) => {
-      const isInsideZone = coords.y < 150;
+      const isInsideZone = coords.y < 200;
       if (!isInsideZone) return;
 
       if (choice === currentItem.answer) {
@@ -50,19 +51,15 @@ function App() {
       startingX={0}
       startingY={index * 100}
       onRelease={handleRelease(choice)}
-      disabled={!state.matches('idle')}
     >
-      <View style={[
-        styles.box,
-        {
-          backgroundColor: state.matches('idle') ? '#61dafb' : 'gray'
-        }
-      ]}>
-        <Text>{choice}</Text>
+      <View style={styles.box}>
+        <Text style={styles.draggableText}>{choice}</Text>
       </View>
     </DraggableView>
   ));
-  const shouldShowChoices = !state.matches('readyToListen');
+
+  const shouldShowChoices = state.matches('idle');
+  const shouldShowSpeaker = ['idle', 'readyToListen'].some(state.matches);
 
   return (
     <View style={styles.app}>
@@ -72,13 +69,19 @@ function App() {
 
       <View style={styles.rightContainer}>
         {state.matches('complete') ? (
-          <Text>You did it!!!!</Text>
+          <CompletedScreen />
         ) : (
           <React.Fragment>
-            <Speaker
-              src={audioSource}
-              onPlay={handlePlay}
-            />
+            {
+              shouldShowSpeaker && (
+                <View style={{marginBottom: 52}}>
+                  <Speaker
+                    src={audioSource}
+                    onPlay={handlePlay}
+                  />
+                </View>
+              )
+            }
 
             {shouldShowChoices && body}
 
@@ -103,19 +106,35 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    backgroundColor: '#F2F2F2'
   },
   box: {
-    width: 80,
-    height: 80,
+    width: 195,
     borderRadius: 4,
-    position: "absolute"
+    position: "absolute",
+    shadowOffset: {
+      width: 8,
+      height: 8
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    backgroundColor: '#F8F8F8'
+  },
+  draggableText: {
+    fontSize: 30,
+    textTransform: 'uppercase',
+    textAlign: 'center'
   },
   leftContainer: {
     height: '100%',
     width: '25%'
   },
-  rightContainer: {}
+  rightContainer: {
+    height: '100%',
+    marginTop: 50,
+    marginLeft: 20
+  }
 });
 
 export default App;

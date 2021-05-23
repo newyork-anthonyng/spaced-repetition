@@ -14,7 +14,7 @@ function Speaker({ src, onPlay }) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Pressable
         onPress={playSound}
       >
@@ -28,12 +28,21 @@ function Speaker({ src, onPlay }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    shadowOffset: {
+      width: 8,
+      height: 8
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 25,
+    width: 175
+  },
   image: {
     height: 100,
-    width: 100,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 5,
+    width: 100
   }
 });
 

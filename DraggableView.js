@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, PanResponder, View, StyleSheet } from 'react-native';
 
-function DraggableView({ startingX, startingY, children, onRelease, disabled }) {
+function DraggableView({ startingX, startingY, children, onRelease }) {
   const animated = React.useRef(
     new Animated.ValueXY({ x: startingX, y: startingY })
   ).current;
@@ -43,7 +43,7 @@ function DraggableView({ startingX, startingY, children, onRelease, disabled }) 
   });
 
   return (
-    <View pointerEvents={disabled ? 'none' : 'auto'}>
+    <View>
       <Animated.View
         {...panResponder.panHandlers}
         style={[animated.getLayout()]}
@@ -56,9 +56,6 @@ function DraggableView({ startingX, startingY, children, onRelease, disabled }) 
 
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: "#61dafb",
-    width: 80,
-    height: 80,
     borderRadius: 4,
     position: "absolute"
   }
