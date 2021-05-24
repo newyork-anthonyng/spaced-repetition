@@ -5,7 +5,7 @@ import ProgressBar from './ProgressBar';
 import flashcardMachine from './machine';
 import { useMachine } from '@xstate/react';
 import Speaker from './Speaker';
-import DraggableView from './DraggableView';
+import MultipleChoice from './MultipleChoice';
 import CorrectImage from './CorrectImage';
 import IncorrectImage from './IncorrectImage';
 import CompletedScreen from './CompletedScreen';
@@ -33,6 +33,16 @@ function App() {
     }
   }
 
+  function handleMultipleChoicePress(choice) {
+    return () => {
+      if (choice === currentItem.answer) {
+        send('CORRECT');
+      } else {
+        send('WRONG');
+      }
+    };
+  }
+
   function handleCorrectImageAnimationEnd() {
     send('NEXT');
   }
@@ -46,16 +56,11 @@ function App() {
   }
 
   let body = choices.map((choice, index) => (
-    <DraggableView
+    <MultipleChoice
       key={index}
-      startingX={0}
-      startingY={index * 100}
-      onRelease={handleRelease(choice)}
-    >
-      <View style={styles.box}>
-        <Text style={styles.draggableText}>{choice}</Text>
-      </View>
-    </DraggableView>
+      title={choice}
+      onPress={handleMultipleChoicePress(choice)}
+    />
   ));
 
   const shouldShowChoices = state.matches('idle');
@@ -108,23 +113,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: '#F2F2F2'
-  },
-  box: {
-    width: 195,
-    borderRadius: 4,
-    position: "absolute",
-    shadowOffset: {
-      width: 8,
-      height: 8
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    backgroundColor: '#F8F8F8'
-  },
-  draggableText: {
-    fontSize: 30,
-    textTransform: 'uppercase',
-    textAlign: 'center'
   },
   leftContainer: {
     height: '100%',
