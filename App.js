@@ -1,14 +1,13 @@
-// https://stackoverflow.com/questions/47551462/how-to-drag-and-drop-with-multiple-view-in-react-native
-import React from 'react';
-import { Image, Animated, StyleSheet, View, Text, Alert, Button } from 'react-native';
-import ProgressBar from './ProgressBar';
-import flashcardMachine from './machine';
-import { useMachine } from '@xstate/react';
-import Speaker from './Speaker';
-import MultipleChoice from './MultipleChoice';
-import CorrectImage from './CorrectImage';
-import IncorrectImage from './IncorrectImage';
-import CompletedScreen from './CompletedScreen';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import ProgressBar from "./components/ProgressBar";
+import flashcardMachine from "./machine";
+import { useMachine } from "@xstate/react";
+import Speaker from "./components/Speaker";
+import MultipleChoice from "./components/MultipleChoice";
+import CorrectImage from "./components/CorrectImage";
+import IncorrectImage from "./components/IncorrectImage";
+import CompletedScreen from "./components/CompletedScreen";
 
 function App() {
   const [state, send] = useMachine(flashcardMachine);
@@ -26,33 +25,33 @@ function App() {
       if (!isInsideZone) return;
 
       if (choice === currentItem.answer) {
-        send('CORRECT');
+        send("CORRECT");
       } else {
-        send('WRONG');
+        send("WRONG");
       }
-    }
+    };
   }
 
   function handleMultipleChoicePress(choice) {
     return () => {
       if (choice === currentItem.answer) {
-        send('CORRECT');
+        send("CORRECT");
       } else {
-        send('WRONG');
+        send("WRONG");
       }
     };
   }
 
   function handleCorrectImageAnimationEnd() {
-    send('NEXT');
+    send("NEXT");
   }
 
   function handleIncorrectImageAnimationEnd() {
-    send('NEXT');
+    send("NEXT");
   }
 
   function handlePlay() {
-    send('LISTEN');
+    send("LISTEN");
   }
 
   let body = choices.map((choice, index) => (
@@ -63,8 +62,8 @@ function App() {
     />
   ));
 
-  const shouldShowChoices = state.matches('idle');
-  const shouldShowSpeaker = ['idle', 'readyToListen'].some(state.matches);
+  const shouldShowChoices = state.matches("idle");
+  const shouldShowSpeaker = ["idle", "readyToListen"].some(state.matches);
 
   return (
     <View style={styles.app}>
@@ -73,27 +72,22 @@ function App() {
       </View>
 
       <View style={styles.rightContainer}>
-        {state.matches('complete') ? (
+        {state.matches("complete") ? (
           <CompletedScreen />
         ) : (
           <React.Fragment>
-            {
-              shouldShowSpeaker && (
-                <View style={{marginBottom: 52}}>
-                  <Speaker
-                    src={audioSource}
-                    onPlay={handlePlay}
-                  />
-                </View>
-              )
-            }
+            {shouldShowSpeaker && (
+              <View style={{ marginBottom: 52 }}>
+                <Speaker src={audioSource} onPlay={handlePlay} />
+              </View>
+            )}
 
             {shouldShowChoices && body}
 
-            {state.matches('correct') && (
+            {state.matches("correct") && (
               <CorrectImage onEnd={handleCorrectImageAnimationEnd} />
             )}
-            {state.matches('incorrect') && (
+            {state.matches("incorrect") && (
               <IncorrectImage onEnd={handleIncorrectImageAnimationEnd} />
             )}
           </React.Fragment>
@@ -112,17 +106,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     display: "flex",
     flexDirection: "row",
-    backgroundColor: '#F2F2F2'
+    backgroundColor: "#F2F2F2",
   },
   leftContainer: {
-    height: '100%',
-    width: '25%'
+    height: "100%",
+    width: "25%",
   },
   rightContainer: {
-    height: '100%',
+    height: "100%",
     marginTop: 50,
-    marginLeft: 20
-  }
+    marginLeft: 20,
+  },
 });
 
 export default App;
