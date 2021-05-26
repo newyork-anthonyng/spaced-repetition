@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Button, Image, Pressable, StyleSheet, Text } from 'react-native';
 import { Audio } from 'expo-av';
-import speaker from './assets/speaker.png';
+import speaker from '../assets/speaker.png';
 
 function Speaker({ src, onPlay }) {
   async function playSound() {

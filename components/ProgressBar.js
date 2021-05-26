@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Animated, StyleSheet, View } from 'react-native';
-import star from './assets/star.png';
+import star from '../assets/star.png';
 
 function ProgressBar({ percentage }) {
   const animation = React.useRef(new Animated.Value(percentage));

@@ -8,8 +8,11 @@ import MultipleChoice from "./components/MultipleChoice";
 import CorrectImage from "./components/CorrectImage";
 import IncorrectImage from "./components/IncorrectImage";
 import CompletedScreen from "./components/CompletedScreen";
+import Tutorial from './screens/Tutorial';
 
 function App() {
+  return <Tutorial />;
+
   const [state, send] = useMachine(flashcardMachine);
   const { context } = state;
 
