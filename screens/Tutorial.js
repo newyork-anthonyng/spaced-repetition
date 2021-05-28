@@ -4,7 +4,7 @@ import tutorialMachine from "../tutorialMachine";
 import { useMachine } from "@xstate/react";
 import Button from "../components/MultipleChoice";
 
-function Tutorial() {
+function Tutorial({ navigation }) {
   const [state, send] = useMachine(tutorialMachine);
   const { context } = state;
 
@@ -13,6 +13,16 @@ function Tutorial() {
 
   function handleNextPress() {
     send("next");
+  }
+
+  if (state.matches('complete')) {
+    return (
+      <View>
+        <Button title="Take test" onPress={() => {
+          navigation.navigate('Test');
+        }} />
+      </View>
+    );
   }
 
   return (
