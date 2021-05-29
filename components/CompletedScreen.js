@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 
 function CompletedScreen() {
   return (
-    <Image source={require('../assets/audio/fireworks.gif')} />
+    <Image source={require('../assets/fireworks.gif')} />
   );
 }
 

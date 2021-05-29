@@ -89,13 +89,19 @@ const flashcardMachine = createMachine({
       on: {
         CORRECT: {
           target: 'correct',
-          actions: assign((context) => {
-            return {
-              currentIndex: context.currentIndex + 1
-            };
-          })
+          actions: [
+            assign((context) => {
+              return {
+                currentIndex: context.currentIndex + 1
+              };
+            }),
+            'playCorrectAudio'
+          ]
         },
-        WRONG: 'incorrect'
+        WRONG: {
+          target: 'incorrect',
+          actions: 'playIncorrectAudio'
+        }
       }
     },
     correct: {

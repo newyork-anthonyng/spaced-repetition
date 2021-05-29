@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import ProgressBar from "../components/ProgressBar";
 import flashcardMachine from "../machine";
 import { useMachine } from "@xstate/react";
@@ -8,9 +8,29 @@ import MultipleChoice from "../components/MultipleChoice";
 import CorrectImage from "../components/CorrectImage";
 import IncorrectImage from "../components/IncorrectImage";
 import CompletedScreen from "../components/CompletedScreen";
+import { Audio } from 'expo-av';
+
+async function playIncorrectAudio() {
+  const { sound } = await Audio.Sound.createAsync(
+    require('../assets/audio/incorrect.m4a')
+  );
+  await sound.playAsync();
+}
+
+async function playCorrectAudio() {
+  const { sound } = await Audio.Sound.createAsync(
+    require('../assets/audio/correct.m4a')
+  );
+  await sound.playAsync();
+}
 
 function Test() {
-  const [state, send] = useMachine(flashcardMachine);
+  const [state, send] = useMachine(flashcardMachine, {
+    actions: {
+      playIncorrectAudio: playIncorrectAudio,
+      playCorrectAudio: playCorrectAudio
+    }
+  });
   const { context } = state;
 
   const currentIndex = context.currentIndex;
