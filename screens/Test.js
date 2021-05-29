@@ -9,6 +9,7 @@ import CorrectImage from "../components/CorrectImage";
 import IncorrectImage from "../components/IncorrectImage";
 import CompletedScreen from "../components/CompletedScreen";
 import { Audio } from 'expo-av';
+import CallToAction from '../components/CallToAction';
 
 async function playIncorrectAudio() {
   const { sound } = await Audio.Sound.createAsync(
@@ -87,6 +88,9 @@ function Test() {
 
   return (
     <View style={styles.app}>
+      <View style={{ position: 'absolute', top: 100, right: 15, zIndex: 1 }}>
+        <CallToAction />
+      </View>
       <View style={styles.leftContainer}>
         <ProgressBar percentage={percentage} />
       </View>
