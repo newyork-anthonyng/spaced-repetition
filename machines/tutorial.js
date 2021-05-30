@@ -1,4 +1,5 @@
 import { createMachine, assign } from "xstate";
+import { tutorialData } from './testData';
 
 const tutorialMachine = createMachine(
   {
@@ -6,28 +7,7 @@ const tutorialMachine = createMachine(
     initial: "ready",
     context: {
       currentIndex: 0,
-      items: [
-        {
-          audio: require("./assets/audio/words/book.m4a"),
-          text: "Book",
-        },
-        {
-          audio: require("./assets/audio/words/people.m4a"),
-          text: "People",
-        },
-        {
-          audio: require("./assets/audio/words/some.m4a"),
-          text: "Some",
-        },
-        {
-          audio: require("./assets/audio/words/which.m4a"),
-          text: "Which",
-        },
-        {
-          audio: require("./assets/audio/words/your.m4a"),
-          text: "Your",
-        },
-      ],
+      items: tutorialData
     },
     states: {
       ready: {
@@ -56,6 +36,7 @@ const tutorialMachine = createMachine(
       },
       complete: {
         type: "final",
+        entry: "onComplete"
       },
     },
   },

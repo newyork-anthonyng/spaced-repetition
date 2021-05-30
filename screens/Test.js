@@ -1,36 +1,36 @@
 import React from "react";
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ProgressBar from "../components/ProgressBar";
-import flashcardMachine from "../machine";
+import machine from "../machines/test";
 import { useMachine } from "@xstate/react";
 import Speaker from "../components/Speaker";
 import MultipleChoice from "../components/MultipleChoice";
 import CorrectImage from "../components/CorrectImage";
 import IncorrectImage from "../components/IncorrectImage";
 import CompletedScreen from "../components/CompletedScreen";
-import { Audio } from 'expo-av';
-import CallToAction from '../components/CallToAction';
+import { Audio } from "expo-av";
+import CallToAction from "../components/CallToAction";
 
 async function playIncorrectAudio() {
   const { sound } = await Audio.Sound.createAsync(
-    require('../assets/audio/incorrect.m4a')
+    require("../assets/audio/incorrect.m4a")
   );
   await sound.playAsync();
 }
 
 async function playCorrectAudio() {
   const { sound } = await Audio.Sound.createAsync(
-    require('../assets/audio/correct.m4a')
+    require("../assets/audio/correct.m4a")
   );
   await sound.playAsync();
 }
 
 function Test() {
-  const [state, send] = useMachine(flashcardMachine, {
+  const [state, send] = useMachine(machine, {
     actions: {
       playIncorrectAudio: playIncorrectAudio,
-      playCorrectAudio: playCorrectAudio
-    }
+      playCorrectAudio: playCorrectAudio,
+    },
   });
   const { context } = state;
 
@@ -88,13 +88,14 @@ function Test() {
 
   return (
     <View style={styles.app}>
-      {
-          state.matches('readyToListen') && (
-            <View style={{ position: 'absolute', top: 175, right: 0, zIndex: 1 }} pointerEvents="none">
-              <CallToAction />
-            </View>
-          )
-      }
+      {state.matches("readyToListen") && (
+        <View
+          style={{ position: "absolute", top: 175, right: -30, zIndex: 1 }}
+          pointerEvents="none"
+        >
+          <CallToAction />
+        </View>
+      )}
       <View style={styles.leftContainer}>
         <ProgressBar percentage={percentage} />
       </View>
@@ -128,13 +129,13 @@ function Test() {
 const styles = StyleSheet.create({
   app: {
     position: "absolute",
-    top: 0,
+    top: 10,
     right: 0,
     left: 0,
     bottom: 0,
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#F2F2F2"
   },
   leftContainer: {
     height: "100%",

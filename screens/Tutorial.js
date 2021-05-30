@@ -1,13 +1,19 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import tutorialMachine from "../tutorialMachine";
+import machine from "../machines/tutorial";
 import { useMachine } from "@xstate/react";
 import Button from "../components/MultipleChoice";
-import Speaker from '../components/Speaker';
-import CallToAction from '../components/CallToAction';
+import Speaker from "../components/Speaker";
+import CallToAction from "../components/CallToAction";
 
 function Tutorial({ navigation }) {
-  const [state, send] = useMachine(tutorialMachine);
+  const [state, send] = useMachine(machine, {
+    actions: {
+      onComplete: () => {
+        navigation.navigate("Test");
+      }
+    }
+  });
   const { context } = state;
 
   const currentIndex = context.currentIndex;
@@ -22,18 +28,17 @@ function Tutorial({ navigation }) {
     send("listen");
   }
 
-  if (state.matches('complete')) {
-    navigation.navigate('Test');
-  }
-
   return (
     <View style={styles.app}>
       <View style={styles.top}>
         <View style={styles.speaker}>
           <Speaker src={audioSource} onPlay={handlePlay} />
         </View>
-        {state.matches('ready') && (
-          <View style={{ position: 'absolute', right: 5, top: 50 }} pointerEvents="none">
+        {state.matches("ready") && (
+          <View
+            style={{ position: "absolute", right: -20, top: 80 }}
+            pointerEvents="none"
+          >
             <CallToAction />
           </View>
         )}
@@ -41,17 +46,18 @@ function Tutorial({ navigation }) {
         <Text style={styles.text}>{currentItem.text}</Text>
       </View>
 
-      {
-        state.matches('listened') && (
-          <View style={styles.bottom}>
-            <Button onPress={handleNextPress} title="➡️" />
-            <View style={{ position: 'absolute', right: 5, top: 15 }} pointerEvents="none">
-              <CallToAction />
-            </View>
+      {state.matches("listened") && (
+        <View style={styles.bottom}>
+          <Button onPress={handleNextPress} title="➡️" />
+          <View
+            style={{ position: "absolute", right: -20, top: 15 }}
+            pointerEvents="none"
+          >
+            <CallToAction />
           </View>
-        )
-      }
-  </View>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -65,20 +71,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F2F2",
   },
   top: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: 48
+    display: "flex",
+    alignItems: "center",
+    marginBottom: 48,
+    marginTop: 48
   },
   speaker: {
-    marginBottom: 24
+    marginBottom: 24,
   },
   text: {
-    fontSize: 48
+    fontSize: 48,
   },
   bottom: {
-    display: 'flex',
-    alignItems: 'center'
-  }
+    display: "flex",
+    alignItems: "center",
+  },
 });
 
 export default Tutorial;
