@@ -8,29 +8,34 @@ const tutorialMachine = createMachine(
       currentIndex: 0,
       items: [
         {
-          audio: require("./assets/audio/box.m4a"),
-          text: "Box",
+          audio: require("./assets/audio/words/book.m4a"),
+          text: "Book",
         },
         {
-          audio: require("./assets/audio/day.m4a"),
-          text: "Day",
+          audio: require("./assets/audio/words/people.m4a"),
+          text: "People",
         },
         {
-          audio: require("./assets/audio/no.m4a"),
-          text: "No",
+          audio: require("./assets/audio/words/some.m4a"),
+          text: "Some",
         },
         {
-          audio: require("./assets/audio/pig.m4a"),
-          text: "Pig",
+          audio: require("./assets/audio/words/which.m4a"),
+          text: "Which",
         },
         {
-          audio: require("./assets/audio/toy.m4a"),
-          text: "Toy",
+          audio: require("./assets/audio/words/your.m4a"),
+          text: "Your",
         },
       ],
     },
     states: {
       ready: {
+        on: {
+          listen: "listened"
+        }
+      },
+      listened: {
         exit: assign((context) => {
           return {
             currentIndex: context.currentIndex + 1,

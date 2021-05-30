@@ -14,36 +14,43 @@ function CallToAction() {
       Animated.sequence([
           Animated.timing(pulseAnim, {
               toValue: MAX_VALUE,
-              duration: 1000
+              duration: 1000,
+              useNativeDriver: false
           }),
           Animated.timing(pulseAnim, {
               toValue: MIN_VALUE,
-              duration: 1000
+              duration: 1000,
+              useNativeDriver: false
+
           }),
           Animated.timing(pulseAnim, {
               toValue: MAX_VALUE,
-              duration: 1000
+              duration: 1000,
+              useNativeDriver: false
           }),
           Animated.timing(pulseAnim, {
               toValue: MIN_VALUE,
-              duration: 2000
+              duration: 2000,
+              useNativeDriver: false
           })
       ])
     ).start();
   }, [pulseAnim]);
 
   return (
-    <Animated.Text style={[
-      styles.text,
-      {
-        transform: [
-          { scale: pulseAnim },
-          { rotateZ: '45deg' }
-        ]
-      }
-    ]}>
-      👈
-    </Animated.Text>
+    <View pointerEvents="none">
+      <Animated.Text style={[
+        styles.text,
+        {
+          transform: [
+            { scale: pulseAnim },
+            { rotateZ: '45deg' }
+          ]
+        }
+      ]} pointerEvents="none">
+        👈
+      </Animated.Text>
+    </View>
   );
 }
 

@@ -88,9 +88,13 @@ function Test() {
 
   return (
     <View style={styles.app}>
-      <View style={{ position: 'absolute', top: 100, right: 15, zIndex: 1 }}>
-        <CallToAction />
-      </View>
+      {
+          state.matches('readyToListen') && (
+            <View style={{ position: 'absolute', top: 175, right: 0, zIndex: 1 }} pointerEvents="none">
+              <CallToAction />
+            </View>
+          )
+      }
       <View style={styles.leftContainer}>
         <ProgressBar percentage={percentage} />
       </View>

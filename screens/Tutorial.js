@@ -3,6 +3,8 @@ import { StyleSheet, View, Text } from "react-native";
 import tutorialMachine from "../tutorialMachine";
 import { useMachine } from "@xstate/react";
 import Button from "../components/MultipleChoice";
+import Speaker from '../components/Speaker';
+import CallToAction from '../components/CallToAction';
 
 function Tutorial({ navigation }) {
   const [state, send] = useMachine(tutorialMachine);
@@ -10,29 +12,46 @@ function Tutorial({ navigation }) {
 
   const currentIndex = context.currentIndex;
   const currentItem = context.items[currentIndex] || {};
+  const audioSource = currentItem.audio;
 
   function handleNextPress() {
     send("next");
   }
 
+  function handlePlay() {
+    send("listen");
+  }
+
   if (state.matches('complete')) {
-    return (
-      <View>
-        <Button title="Take test" onPress={() => {
-          navigation.navigate('Test');
-        }} />
-      </View>
-    );
+    navigation.navigate('Test');
   }
 
   return (
     <View style={styles.app}>
-      <View style={styles.rightContainer}>
-        <Text>{JSON.stringify(state.value, null, 2)}</Text>
-        <Text>{currentItem.text}</Text>
-        <Button onPress={handleNextPress} title="Next" />
+      <View style={styles.top}>
+        <View style={styles.speaker}>
+          <Speaker src={audioSource} onPlay={handlePlay} />
+        </View>
+        {state.matches('ready') && (
+          <View style={{ position: 'absolute', right: 5, top: 50 }} pointerEvents="none">
+            <CallToAction />
+          </View>
+        )}
+
+        <Text style={styles.text}>{currentItem.text}</Text>
       </View>
-    </View>
+
+      {
+        state.matches('listened') && (
+          <View style={styles.bottom}>
+            <Button onPress={handleNextPress} title="➡️" />
+            <View style={{ position: 'absolute', right: 5, top: 15 }} pointerEvents="none">
+              <CallToAction />
+            </View>
+          </View>
+        )
+      }
+  </View>
   );
 }
 
@@ -43,19 +62,23 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    display: "flex",
-    flexDirection: "row",
     backgroundColor: "#F2F2F2",
   },
-  leftContainer: {
-    height: "100%",
-    width: "25%",
+  top: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 48
   },
-  rightContainer: {
-    height: "100%",
-    marginTop: 50,
-    marginLeft: 20,
+  speaker: {
+    marginBottom: 24
   },
+  text: {
+    fontSize: 48
+  },
+  bottom: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 });
 
 export default Tutorial;

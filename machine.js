@@ -28,7 +28,7 @@ const flashcardMachine = createMachine({
     currentIndex: 0,
     items: [
       {
-        audio: require('./assets/audio/box.m4a'),
+        audio: require('./assets/audio/words/box.m4a'),
         answer: 'Box',
         choices: shuffle([
           'Box',
@@ -38,7 +38,7 @@ const flashcardMachine = createMachine({
         ]),
       },
       {
-        audio: require('./assets/audio/day.m4a'),
+        audio: require('./assets/audio/words/day.m4a'),
         answer: 'Day',
         choices: shuffle([
           'Day',
@@ -48,7 +48,7 @@ const flashcardMachine = createMachine({
         ])
       },
       {
-        audio: require('./assets/audio/no.m4a'),
+        audio: require('./assets/audio/words/no.m4a'),
         answer: 'No',
         choices: shuffle([
           'No',
@@ -58,7 +58,7 @@ const flashcardMachine = createMachine({
         ])
       },
       {
-        audio: require('./assets/audio/pig.m4a'),
+        audio: require('./assets/audio/words/pig.m4a'),
         answer: 'Pig',
         choices: shuffle([
           'Pig',
@@ -68,7 +68,7 @@ const flashcardMachine = createMachine({
         ])
       },
       {
-        audio: require('./assets/audio/toy.m4a'),
+        audio: require('./assets/audio/words/toy.m4a'),
         answer: 'Toy',
         choices: shuffle([
           'Toy',
