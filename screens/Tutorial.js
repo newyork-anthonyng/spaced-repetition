@@ -6,19 +6,23 @@ import Button from "../components/MultipleChoice";
 import Speaker from "../components/Speaker";
 import CallToAction from "../components/CallToAction";
 
+// const AUDIO_SOURCE_BASE_URL = `http://localhost:3000`;
+const AUDIO_SOURCE_BASE_URL = `https://1ecb9bf1de79.ngrok.io`;
+
 function Tutorial({ navigation }) {
   const [state, send] = useMachine(machine, {
     actions: {
       onComplete: () => {
         navigation.navigate("Test");
-      }
-    }
+      },
+    },
   });
   const { context } = state;
 
   const currentIndex = context.currentIndex;
-  const currentItem = context.items[currentIndex] || {};
-  const audioSource = currentItem.audio;
+  const items = context.items || [];
+  const currentItem = items[currentIndex] || {};
+  const audioSource = `${AUDIO_SOURCE_BASE_URL}/${currentItem.audio}`;
 
   function handleNextPress() {
     send("next");
@@ -26,6 +30,14 @@ function Tutorial({ navigation }) {
 
   function handlePlay() {
     send("listen");
+  }
+
+  if (state.matches("loading")) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (state.matches("empty")) {
+    return <Text>Empty...</Text>;
   }
 
   return (
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     marginBottom: 48,
-    marginTop: 48
+    marginTop: 48,
   },
   speaker: {
     marginBottom: 24,

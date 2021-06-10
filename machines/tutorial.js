@@ -1,19 +1,45 @@
 import { createMachine, assign } from "xstate";
-import { tutorialData } from './testData';
+import { fetchTutorial } from "./api";
 
 const tutorialMachine = createMachine(
   {
     id: "tutorial",
-    initial: "ready",
+    initial: "loading",
     context: {
       currentIndex: 0,
-      items: tutorialData
+      items: null,
     },
     states: {
+      loading: {
+        invoke: {
+          src: fetchTutorial,
+          onDone: [
+            {
+              target: "ready",
+              actions: assign((_context, event) => {
+                return {
+                  items: event.data.data,
+                };
+              }),
+              cond: (_context, event) => {
+                const validationResponse = event.data;
+                if (validationResponse) {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+            },
+            {
+              target: "empty",
+            },
+          ],
+        },
+      },
       ready: {
         on: {
-          listen: "listened"
-        }
+          listen: "listened",
+        },
       },
       listened: {
         exit: assign((context) => {
@@ -36,7 +62,10 @@ const tutorialMachine = createMachine(
       },
       complete: {
         type: "final",
-        entry: "onComplete"
+        entry: "onComplete",
+      },
+      empty: {
+        type: "final",
       },
     },
   },

@@ -3,7 +3,6 @@ import TutorialScreen from "./screens/Tutorial";
 import TestScreen from "./screens/Test";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar } from 'expo-status-bar';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +11,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false
+          headerShown: false,
         }}
       >
         <Stack.Screen name="Tutorial" component={TutorialScreen} />
