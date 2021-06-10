@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import ProgressBar from "../components/ProgressBar";
 import machine from "../machines/test";
 import { useMachine } from "@xstate/react";
@@ -35,23 +35,11 @@ function Test() {
   const { context } = state;
 
   const currentIndex = context.currentIndex;
-  const currentItem = context.items[currentIndex] || {};
+  const items = context.items || [];
+  const currentItem = items[currentIndex] || {};
   const choices = currentItem.choices || [];
   const audioSource = currentItem.audio;
-  const percentage = (currentIndex / context.items.length) * 100;
-
-  function handleRelease(choice) {
-    return (coords) => {
-      const isInsideZone = coords.y < 200;
-      if (!isInsideZone) return;
-
-      if (choice === currentItem.answer) {
-        send("CORRECT");
-      } else {
-        send("WRONG");
-      }
-    };
-  }
+  const percentage = (currentIndex / items.length) * 100;
 
   function handleMultipleChoicePress(choice) {
     return () => {
@@ -85,6 +73,14 @@ function Test() {
 
   const shouldShowChoices = state.matches("idle");
   const shouldShowSpeaker = ["idle", "readyToListen"].some(state.matches);
+
+  if (state.matches("loading")) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (state.matches("empty")) {
+    return <Text>Empty...</Text>;
+  }
 
   return (
     <View style={styles.app}>
@@ -135,7 +131,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "#F2F2F2"
+    backgroundColor: "#F2F2F2",
   },
   leftContainer: {
     height: "100%",

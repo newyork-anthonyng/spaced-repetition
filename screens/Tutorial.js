@@ -6,9 +6,6 @@ import Button from "../components/MultipleChoice";
 import Speaker from "../components/Speaker";
 import CallToAction from "../components/CallToAction";
 
-// const AUDIO_SOURCE_BASE_URL = `http://localhost:3000`;
-const AUDIO_SOURCE_BASE_URL = `https://1ecb9bf1de79.ngrok.io`;
-
 function Tutorial({ navigation }) {
   const [state, send] = useMachine(machine, {
     actions: {
@@ -22,7 +19,7 @@ function Tutorial({ navigation }) {
   const currentIndex = context.currentIndex;
   const items = context.items || [];
   const currentItem = items[currentIndex] || {};
-  const audioSource = `${AUDIO_SOURCE_BASE_URL}/${currentItem.audio}`;
+  const audioSource = currentItem.audio;
 
   function handleNextPress() {
     send("next");

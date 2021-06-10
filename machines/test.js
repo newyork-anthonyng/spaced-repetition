@@ -1,64 +1,94 @@
-import { createMachine, assign } from 'xstate';
-import { testData } from './testData';
+import { createMachine, assign } from "xstate";
+import { fetchTest } from "./api";
 
-const flashcardMachine = createMachine({
-  id: 'flashcard',
-  initial: 'readyToListen',
-  context: {
-    currentIndex: 0,
-    items: testData
-  },
-  states: {
-    readyToListen: {
-      on: {
-        LISTEN: 'idle'
-      }
+const flashcardMachine = createMachine(
+  {
+    id: "flashcard",
+    initial: "loading",
+    context: {
+      currentIndex: 0,
+      items: null,
     },
-    idle: {
-      on: {
-        CORRECT: {
-          target: 'correct',
-          actions: [
-            assign((context) => {
-              return {
-                currentIndex: context.currentIndex + 1
-              };
-            }),
-            'playCorrectAudio'
-          ]
+    states: {
+      loading: {
+        invoke: {
+          src: fetchTest,
+          onDone: [
+            {
+              target: "readyToListen",
+              actions: assign((_context, event) => {
+                return {
+                  items: event.data.data,
+                };
+              }),
+              cond: (_context, event) => {
+                const validationResponse = event.data;
+                if (validationResponse) {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+            },
+            {
+              target: "empty",
+            },
+          ],
         },
-        WRONG: {
-          target: 'incorrect',
-          actions: 'playIncorrectAudio'
-        }
-      }
-    },
-    correct: {
-      on: {
-        NEXT: [
-          {
-            target: 'complete',
-            cond: 'isOnLastCard'
+      },
+      readyToListen: {
+        on: {
+          LISTEN: "idle",
+        },
+      },
+      idle: {
+        on: {
+          CORRECT: {
+            target: "correct",
+            actions: [
+              assign((context) => {
+                return {
+                  currentIndex: context.currentIndex + 1,
+                };
+              }),
+              "playCorrectAudio",
+            ],
           },
-          'readyToListen'
-        ]
-      }
+          WRONG: {
+            target: "incorrect",
+            actions: "playIncorrectAudio",
+          },
+        },
+      },
+      correct: {
+        on: {
+          NEXT: [
+            {
+              target: "complete",
+              cond: "isOnLastCard",
+            },
+            "readyToListen",
+          ],
+        },
+      },
+      incorrect: {
+        on: {
+          NEXT: "idle",
+        },
+      },
+      complete: {
+        type: "final",
+      },
+      empty: { type: "final" },
     },
-    incorrect: {
-      on: {
-        NEXT: 'idle'
-      }
+  },
+  {
+    guards: {
+      isOnLastCard: (context) => {
+        return context.currentIndex === context.items.length;
+      },
     },
-    complete: {
-      type: 'final'
-    }
   }
-}, {
-  guards: {
-    isOnLastCard: (context) => {
-      return context.currentIndex === context.items.length;
-    }
-  }
-});
+);
 
 export default flashcardMachine;

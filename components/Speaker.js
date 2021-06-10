@@ -1,11 +1,14 @@
 import React from "react";
-import { View, Button, Image, Pressable, StyleSheet, Text } from "react-native";
+import { View, Image, Pressable, StyleSheet } from "react-native";
 import { Audio } from "expo-av";
 import speaker from "../assets/speaker.png";
+import { API_BASE_URL } from "../machines/api";
 
 function Speaker({ src, onPlay }) {
   async function playSound() {
-    const { sound } = await Audio.Sound.createAsync({ uri: src });
+    const audioSource = `${API_BASE_URL}/${src}`;
+
+    const { sound } = await Audio.Sound.createAsync({ uri: audioSource });
 
     await sound.playAsync();
     if (onPlay) {
