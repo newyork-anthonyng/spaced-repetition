@@ -4,7 +4,7 @@
   "expo": {
     "name": "spaced-repetition",
     "slug": "spaced-repetition",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetBundlePatterns": [
       "**/*"
     ],
