@@ -22,12 +22,10 @@ const tutorialMachine = createMachine(
                 };
               }),
               cond: (_context, event) => {
-                const validationResponse = event.data;
-                if (validationResponse) {
-                  return true;
-                } else {
-                  return false;
-                }
+                const data = event.data;
+                const hasTutorialItems = data.length > 0;
+
+                return hasTutorialItems;
               },
             },
             {
@@ -67,6 +65,7 @@ const tutorialMachine = createMachine(
       },
       empty: {
         type: "final",
+        entry: "onComplete",
       },
     },
   },
