@@ -1,5 +1,5 @@
 import { createMachine, assign } from "xstate";
-import { fetchTest } from "./api";
+import { fetchTest, postPromoteTestItem, postDemoteTestItem } from "./api";
 
 const flashcardMachine = createMachine(
   {
@@ -8,6 +8,7 @@ const flashcardMachine = createMachine(
     context: {
       currentIndex: 0,
       items: null,
+      isWrong: false
     },
     states: {
       loading: {
@@ -37,6 +38,9 @@ const flashcardMachine = createMachine(
         },
       },
       readyToListen: {
+        entry: assign({
+          isWrong: false
+        }),
         on: {
           LISTEN: "idle",
         },
@@ -52,11 +56,16 @@ const flashcardMachine = createMachine(
                 };
               }),
               "playCorrectAudio",
+              "notifyCorrect",
             ],
           },
           WRONG: {
             target: "incorrect",
-            actions: "playIncorrectAudio",
+            actions: [
+              "playIncorrectAudio",
+              assign({ isWrong: true }),
+              "notifyIncorrect"
+            ]
           },
         },
       },
@@ -88,6 +97,24 @@ const flashcardMachine = createMachine(
         return context.currentIndex === context.items.length;
       },
     },
+    actions: {
+      notifyCorrect: ({ isWrong, currentIndex, items }) => {
+        if (isWrong) return;
+
+        const currentItem = items[currentIndex];
+
+        if (!currentItem) return;
+
+        postPromoteTestItem(currentItem.id);
+      },
+      notifyIncorrect: ({ currentIndex, items }) => {
+        const currentItem = items[currentIndex];
+
+        if (!currentItem) return;
+
+        postDemoteTestItem(currentItem.id);
+      }
+    }
   }
 );
 
