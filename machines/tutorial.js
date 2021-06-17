@@ -1,5 +1,5 @@
 import { createMachine, assign } from "xstate";
-import { fetchTutorial } from "./api";
+import { fetchTutorial, postListenTutorialItem } from "./api";
 
 const tutorialMachine = createMachine(
   {
@@ -42,6 +42,7 @@ const tutorialMachine = createMachine(
         },
       },
       listened: {
+        entry: ['notifyListened'],
         exit: assign((context) => {
           return {
             currentIndex: context.currentIndex + 1,
@@ -75,6 +76,15 @@ const tutorialMachine = createMachine(
         return context.currentIndex === context.items.length;
       },
     },
+    actions: {
+      notifyListened: ({ currentIndex, items }) => {
+        const currentTutorialItem = items[currentIndex];
+
+        if (!currentTutorialItem) return;
+
+        postListenTutorialItem(currentTutorialItem.id);
+      }
+    }
   }
 );
 
