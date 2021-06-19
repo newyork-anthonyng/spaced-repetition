@@ -11,6 +11,18 @@ import CompletedScreen from "../components/CompletedScreen";
 import { Audio } from "expo-av";
 import CallToAction from "../components/CallToAction";
 
+const celebrationAudios = [
+  require("../assets/audio/correct1.m4a"),
+  require("../assets/audio/correct2.m4a"),
+  require("../assets/audio/correct3.m4a"),
+];
+function getRandomCorrectAudioNoise() {
+  const randomIndex = Math.floor(Math.random() * celebrationAudios.length);
+  const item = celebrationAudios[randomIndex];
+
+  return item;
+}
+
 async function playIncorrectAudio() {
   const { sound } = await Audio.Sound.createAsync(
     require("../assets/audio/incorrect.m4a")
@@ -19,9 +31,7 @@ async function playIncorrectAudio() {
 }
 
 async function playCorrectAudio() {
-  const { sound } = await Audio.Sound.createAsync(
-    require("../assets/audio/correct.m4a")
-  );
+  const { sound } = await Audio.Sound.createAsync(getRandomCorrectAudioNoise());
   await sound.playAsync();
 }
 
