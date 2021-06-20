@@ -22,8 +22,8 @@ const tutorialMachine = createMachine(
                 };
               }),
               cond: (_context, event) => {
-                const data = event.data;
-                const hasTutorialItems = data.length > 0;
+                const response = event.data;
+                const hasTutorialItems = response.data.length > 0;
 
                 return hasTutorialItems;
               },
@@ -40,7 +40,7 @@ const tutorialMachine = createMachine(
         },
       },
       listened: {
-        entry: ['notifyListened'],
+        entry: ["notifyListened"],
         exit: assign((context) => {
           return {
             currentIndex: context.currentIndex + 1,
@@ -82,8 +82,8 @@ const tutorialMachine = createMachine(
         if (!currentTutorialItem) return;
 
         postListenTutorialItem(currentTutorialItem.id);
-      }
-    }
+      },
+    },
   }
 );
 
