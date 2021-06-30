@@ -94,14 +94,6 @@ function Test() {
 
   return (
     <View style={styles.app}>
-      {state.matches("readyToListen") && (
-        <View
-          style={{ position: "absolute", top: 175, right: -30, zIndex: 1 }}
-          pointerEvents="none"
-        >
-          <CallToAction />
-        </View>
-      )}
       <View style={styles.leftContainer}>
         <ProgressBar percentage={percentage} />
       </View>
@@ -114,6 +106,16 @@ function Test() {
             {shouldShowSpeaker && (
               <View style={{ marginBottom: 52 }}>
                 <Speaker src={audioSource} onPlay={handlePlay} />
+                {
+                  state.matches('readyToListen') && (
+                    <View
+                      style={{ position: 'absolute', bottom: -100, right: -90, zIndex: 1 }}
+                      pointerEvents='none'
+                    >
+                      <CallToAction />
+                    </View>
+                  )
+                }
               </View>
             )}
 

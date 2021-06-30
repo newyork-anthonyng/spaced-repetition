@@ -42,27 +42,29 @@ function Tutorial({ navigation }) {
       <View style={styles.top}>
         <View style={styles.speaker}>
           <Speaker src={audioSource} onPlay={handlePlay} />
-        </View>
-        {state.matches("ready") && (
-          <View
-            style={{ position: "absolute", right: -20, top: 80 }}
-            pointerEvents="none"
-          >
-            <CallToAction />
-          </View>
-        )}
 
+          {state.matches("ready") && (
+            <View
+              style={{ position: "absolute", right: -90, bottom: -100 }}
+              pointerEvents="none"
+            >
+              <CallToAction />
+            </View>
+          )}
+        </View>
         <Text style={styles.text}>{currentItem.text}</Text>
       </View>
 
-      {state.matches("listened") && (
+      {state.matches('listened') && (
         <View style={styles.bottom}>
-          <Button onPress={handleNextPress} title="➡️" />
-          <View
-            style={{ position: "absolute", right: -20, top: 15 }}
-            pointerEvents="none"
-          >
-            <CallToAction />
+          <View>
+            <Button onPress={handleNextPress} title="➡️" />
+            <View
+              style={{ position: "absolute", right: -90, bottom: -80 }}
+              pointerEvents="none"
+            >
+              <CallToAction />
+            </View>
           </View>
         </View>
       )}
