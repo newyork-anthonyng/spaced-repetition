@@ -1,5 +1,5 @@
-// export const API_BASE_URL = "https://infinite-spire-97087.herokuapp.com";
-export const API_BASE_URL = 'http://localhost:3000';
+export const API_BASE_URL = "https://infinite-spire-97087.herokuapp.com";
+// export const API_BASE_URL = "http://localhost:3000";
 
 const TUTORIAL_URL = `${API_BASE_URL}/tutorial`;
 const TEST_URL = `${API_BASE_URL}/test`;
@@ -16,39 +16,31 @@ export function fetchTest() {
 }
 
 export function postListenTutorialItem(id) {
-  return fetch(
-    LISTEN_TUTORIAL_ITEM_URL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    }).then((res) => res.json());
+  return fetch(LISTEN_TUTORIAL_ITEM_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  }).then((res) => res.json());
 }
 
 export function postPromoteTestItem(id) {
-  return fetch(
-    PROMOTE_TEST_ITEM_URL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    }
-  ).then((res) => res.json());
+  return fetch(PROMOTE_TEST_ITEM_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  }).then((res) => res.json());
 }
 
 export function postDemoteTestItem(id) {
-  return fetch(
-    DEMOTE_TEST_ITEM_URL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    }
-  ).then((res) => res.json());
+  return fetch(DEMOTE_TEST_ITEM_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  }).then((res) => res.json());
 }
