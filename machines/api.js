@@ -1,4 +1,5 @@
-export const API_BASE_URL = "https://infinite-spire-97087.herokuapp.com";
+// export const API_BASE_URL = "https://infinite-spire-97087.herokuapp.com";
+export const API_BASE_URL = 'http://localhost:3000';
 
 const TUTORIAL_URL = `${API_BASE_URL}/tutorial`;
 const TEST_URL = `${API_BASE_URL}/test`;
